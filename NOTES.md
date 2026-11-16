@@ -135,3 +135,68 @@ Price per unit is calculated by dividing medicine price by the parsed pack quant
 
 ### Output
 `data/processed/medicines_phase3.parquet`
+
+## Phase 4: Medicine Matching and Price Comparison
+
+Status: Completed
+
+### Dataset
+- Input: `data/processed/medicines_phase3.parquet`
+- Output: `data/processed/medicines_phase4.parquet`
+- Total records: 253,973
+- Output columns: 37
+
+### Ingredient Identity Matching
+- Records with valid ingredient identities: 250,101
+- Records with missing or invalid ingredient identities: 3,872
+- Unique matching groups: 15,101
+- Records with missing matching groups: 143
+
+Matching identities are created using normalized ingredients, ingredient strengths, dosage forms and formulation information.
+
+### Price Grouping
+- Unique price groups: 16,111
+- Records with missing price groups: 21
+- Price-eligible records: 246,043
+- Price-ineligible records: 7,930
+
+Price groups are created using matching group identity and compatible pack units.
+
+### Price Comparison
+- Created `ingredient_identity_key`
+- Created `match_group_key`
+- Created `price_group_key`
+- Created `price_eligible`
+- Calculated group minimum, median and maximum price per unit
+- Calculated potential savings against the lowest-priced alternative
+- Implemented alternative medicine retrieval using medicine ID
+
+Price per unit is compared only within matching medicine groups with compatible pack units.
+
+### Important Decisions
+- Ingredient identities with missing or invalid information are excluded from matching.
+- Unknown dosage forms are excluded from matching.
+- Unspecified formulation is kept distinct from identified release modifiers.
+- Discontinued medicines are excluded from price comparisons.
+- Zero-priced records are excluded from price comparisons.
+- Pack descriptions requiring manual review are excluded from price comparisons.
+- Different pack measurement units are not compared directly.
+- Unusually low or high prices should be reviewed rather than automatically removed.
+- Matching results represent dataset-based composition and formulation comparisons, not proof of clinical interchangeability.
+
+### Validation
+- Verified that invalid ingredient identities do not receive matching or price-group keys.
+- Verified that missing matching groups do not receive price-group keys.
+- Verified that all price-eligible records have valid identity and grouping keys.
+- Verified that discontinued and zero-priced records are excluded.
+- Tested alternative retrieval using Augmentin 625 Duo Tablet.
+- Successfully saved the Phase 4 dataset.
+
+### Limitations
+- Dataset matching does not establish clinical equivalence or suitability for substitution.
+- Incomplete ingredient or strength information can prevent reliable matching.
+- Unusually low or high prices may require manual verification.
+- Price comparisons depend on compatible pack units and correctly parsed quantities.
+
+### Output
+`data/processed/medicines_phase4.parquet`
