@@ -106,6 +106,11 @@
 - Parser coverage: 99.99%
 - Missing pack-size labels: 0
 
+Parsed: 253,952
+Needs review: 21
+Missing prices: 4
+Valid price-per-unit values: 253,948
+
 ### Price Normalization
 - Created `pack_quantity`
 - Created `pack_unit`

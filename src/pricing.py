@@ -4,11 +4,7 @@ import pandas as pd
 
 
 def parse_pack(value):
-    """
-    Parse medicine pack descriptions into:
-    quantity, normalized comparison unit,
-    container and parsing status.
-    """
+
 
     if pd.isna(value) or not str(value).strip():
         return {
@@ -42,9 +38,9 @@ def parse_pack(value):
 
     unit = "unknown"
 
-    # -------------------------------------------------
+  
     # 1. Volume
-    # -------------------------------------------------
+   
 
     if re.search(r"\bml\b", description):
         unit = "ml"
@@ -53,30 +49,27 @@ def parse_pack(value):
         unit = "ml"
         quantity *= 1000
 
-    # -------------------------------------------------
     # 2. Weight
-    # -------------------------------------------------
-
+    
     elif re.search(r"\b(gm|grams?|g)\b", description):
         unit = "g"
 
-    # -------------------------------------------------
+   
     # 3. International units
-    # -------------------------------------------------
+   
 
     elif re.search(r"\biu\b", description):
         unit = "IU"
 
-    # -------------------------------------------------
     # 4. MDI: keep separate, do not assume equivalence
-    # -------------------------------------------------
+   
 
     elif re.search(r"\bmdi\b", description):
         unit = "MDI"
 
-    # -------------------------------------------------
+    
     # 5. Tablets and similar solid dosage forms
-    # -------------------------------------------------
+    
 
     elif re.search(r"\btablets?\b", description):
         unit = "tablet"
@@ -102,9 +95,9 @@ def parse_pack(value):
     elif re.search(r"\bchewing gums?\b", description):
         unit = "chewing_gum"
 
-    # -------------------------------------------------
+   
     # 6. Rectal and vaginal dosage forms
-    # -------------------------------------------------
+   
 
     elif re.search(
         r"\b(vaginal suppository|suppositories|suppository)\b",
@@ -115,16 +108,16 @@ def parse_pack(value):
     elif re.search(r"\bpessaries\b", description):
         unit = "pessary"
 
-    # -------------------------------------------------
+
     # 7. Patches
-    # -------------------------------------------------
+   
 
     elif re.search(r"\bpatch(?:es)?\b", description):
         unit = "patch"
 
-    # -------------------------------------------------
+   
     # 8. Inhalation products
-    # -------------------------------------------------
+
 
     elif re.search(r"\brespules\b", description):
         unit = "respule"
@@ -141,9 +134,9 @@ def parse_pack(value):
     elif re.search(r"\binhalers?\b", description):
         unit = "inhaler"
 
-    # -------------------------------------------------
+   
     # 9. Injections
-    # -------------------------------------------------
+   
 
     elif re.search(r"\binjections\b", description):
         unit = "injection"
@@ -171,9 +164,9 @@ def parse_pack(value):
         else:
             unit = "injection_unit"
 
-    # -------------------------------------------------
+
     # 10. Other countable products
-    # -------------------------------------------------
+  
 
     elif re.search(r"\bsachets?\b", description):
         unit = "sachet"
@@ -212,12 +205,8 @@ def parse_pack(value):
         unit = "solution"
 
     
-
-
-    
-    # -------------------------------------------------
     # 11. Additional validated countable pack formats
-    # -------------------------------------------------
+   
 
     if unit == "unknown":
 
@@ -335,7 +324,7 @@ def parse_pack(value):
         elif re.search(r"\bpowder\b", description):
             unit = "powder"
 
-        # Prefilled syringes before general vial matching
+   
         elif re.search(r"\bprefilled syringes?\b", description):
             unit = "prefilled_syringe"
 
@@ -352,10 +341,6 @@ def parse_pack(value):
             unit = "tube_unit"
 
 
-
-    # -------------------------------------------------
-    # 12. Parsing status
-    # -------------------------------------------------
 
     if unit == "unknown":
         status = "needs_review"
